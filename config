@@ -22,6 +22,8 @@
 (electric-indent-mode 0)			        ; Disable auto indent
 (setq-default show-trailing-whitespace t)	; highlight spaces trailing whitespace
 (show-paren-mode 1)							; highlight matching parentheses
+(setq make-backup-files nil) 				; stop creating backup~ files
+(setq auto-save-default nil) 				; stop creating #autosave# files
 
 ;; disabling auto tabbing
 (add-hook 'MAJORMODE-mode-hook 'my-MAJORMODE-mode-hook)
@@ -42,8 +44,8 @@
 ;; changing cursor color
 (defvar blink-cursor-colors (list "#ff0000" "#ff7f00" "#ffff00" "#00ff00" "#0000ff" "#4b0082" "#9400D3" )
   "On each blink the cursor will cycle to the next color in this list.")
-(defvar blink-cursor-interval-visible 0.05)
-(defvar blink-cursor-interval-invisible 0.05)
+(defvar blink-cursor-interval-visible 0.01)
+(defvar blink-cursor-interval-invisible 0.01)
 
 
 (setq blink-cursor-count 0)
