@@ -13,13 +13,26 @@
  '(ansi-color-names-vector
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
  '(custom-enabled-themes (quote (wombat)))
- '(package-selected-packages (quote (nyan-mode))))
+ '(package-selected-packages
+   (quote
+    (markdown-mode projectile highlight-symbol idle-highlight-mode nyan-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+
+;; astyle using command line
+(defun astyle-this-buffer (pmin pmax)
+  (interactive "r")
+  (shell-command-on-region pmin pmax
+                           "astyle" ;; add options here...
+                           (current-buffer) t
+                           (get-buffer-create "*Astyle Errors*") t))
+
+(global-set-key (kbd "<C-tab>") 'astyle-this-buffer)
 
 
 ;;***** added stuff *******
@@ -35,6 +48,35 @@
 (electric-indent-mode 0)                        ;disable auto indent after new line
 (nyan-mode 1)
 (nyan-start-animation)
+(setq-default c-basic-offset 4)                 ; 4 space indent
+
+
+;; enable highlight symbol mode
+(defun highlight-symbol-mode-on () (highlight-symbol-mode 1))
+(define-globalized-minor-mode global-highlight-symbol-mode highlight-symbol-mode highlight-symbol-mode-on)
+(global-highlight-symbol-mode 1)
+
+
+;; font
+;; Set default font
+(set-face-attribute 'default nil
+                    :family "DejaVu Sans Mono"
+                    :height 110
+                    :weight 'normal
+                    :width 'normal)
+
+
+;; open .h in c++ mode
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
+;; regex-align
+(global-set-key (kbd "C-x r") 'align-regexp)
+
+;; projectile
+;;(add-hook 'c-mode-hook 'projectile-find-other-file-other-window)
+;;(add-hook 'c++-mode-hook 'projectile-find-other-file-other-window)
+(global-set-key (kbd "C-x x") 'projectile-find-other-file)
+
 
 ;; changing cursor color
 (defvar blink-cursor-colors (list "#ff0000" "#ff7f00" "#ffff00" "#00ff00" "#0000ff" "#4b0082" "#9400D3" )
@@ -68,8 +110,6 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 
 
 
-
-
 ;;***** Loading packages ********
 
 ;; load emacs 24's package system. Add MELPA repository.
@@ -80,5 +120,7 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
    ;; '("melpa" . "http://stable.melpa.org/packages/") ; many packages won't show if using stable
    '("melpa" . "http://melpa.milkbox.net/packages/")
    t))
+
+
 
 
