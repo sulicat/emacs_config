@@ -1,4 +1,3 @@
-
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -10,8 +9,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
+ '(c++-font-lock-extra-types
+   (quote
+    ("\\sw+_t" "FILE" "lconv" "tm" "va_list" "jmp_buf" "istream" "istreambuf" "ostream" "ostreambuf" "ifstream" "ofstream" "fstream" "strstream" "strstreambuf" "istrstream" "ostrstream" "ios" "string" "rope" "list" "slist" "deque" "vector" "bit_vector" "set" "multiset" "map" "multimap" "hash" "hash_set" "hash_multiset" "hash_map" "hash_multimap" "stack" "queue" "priority_queue" "type_info" "iterator" "const_iterator" "reverse_iterator" "const_reverse_iterator" "reference" "const_reference")))
  '(custom-enabled-themes (quote (wombat)))
  '(package-selected-packages
    (quote
@@ -21,10 +25,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(mode-line ((t (:background "#444444" :foreground "white"))))
+ '(region ((t (:inverse-video t)))))
 
 
-;; astyle using command line
+;; astyle using command line ===========================================================================
 (defun astyle-this-buffer (pmin pmax)
   (interactive "r")
   (shell-command-on-region pmin pmax
@@ -35,21 +40,20 @@
 (global-set-key (kbd "<C-tab>") 'astyle-this-buffer)
 
 
-;;***** added stuff *******
+;; added stuff =========================================================================================
 
 (setq inhibit-startup-message t)        	; Disable startup message
 (global-linum-mode t)                  	 	; enable line numbers
 (setq-default truncate-lines 1)         	; turn word wrap off1
 (tool-bar-mode -1)              	        ; Disable the Tool Bar
 (setq-default show-trailing-whitespace t)	; highlight spaces trailing whitespace
-(show-paren-mode 1)							; highlight matching parentheses
-(setq make-backup-files nil) 				; stop creating backup~ files
-(setq auto-save-default nil) 				; stop creating #autosave# files
-(electric-indent-mode 0)                        ;disable auto indent after new line
+(show-paren-mode 1)				; highlight matching parentheses
+(setq make-backup-files nil) 			; stop creating backup~ files
+(setq auto-save-default nil) 			; stop creating #autosave# files
+(electric-indent-mode 0)                        ; disable auto indent after new line
 (nyan-mode 1)
 (nyan-start-animation)
 (setq-default c-basic-offset 4)                 ; 4 space indent
-
 
 ;; enable highlight symbol mode
 (defun highlight-symbol-mode-on () (highlight-symbol-mode 1))
@@ -57,28 +61,56 @@
 (global-highlight-symbol-mode 1)
 
 
-;; font
+
+
+;; font ================================================================================================
 ;; Set default font
 (set-face-attribute 'default nil
-                    :family "DejaVu Sans Mono"
-                    :height 110
-                    :weight 'normal
-                    :width 'normal)
+ :family "DejaVu Sans Mono"
+ :height 110
+ :weight 'normal
+ :width 'normal)
+
+;; Insert command using C-S-i ==========================================================================
+(defun insert-command-to-current-buffer ()
+  "insert a shell command to the current buffer."
+  (interactive)
+  (insert
+   (shell-command-to-string
+    (concat (read-string "Command: ") "\n")
+    )
+   )
+  )
+
+(global-set-key (kbd "C-S-i") 'insert-command-to-current-buffer)
 
 
-;; open .h in c++ mode
+;; Change some of the syntacx highlighting =============================================================
+(defun c-cpp-common-hook ()
+  (font-lock-add-keywords nil
+			  '(("TODO" (0 font-lock-warning-face))))
+
+  (font-lock-add-keywords nil
+			  '(("\\." (0 font-lock-variable-name-face))))
+  )
+
+(add-hook 'c++-mode-hook #'c-cpp-common-hook)
+(add-hook 'c-mode-hook #'c-cpp-common-hook)
+
+
+;; open .h in c++ mode =================================================================================
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
-;; regex-align
+;; regex-align =========================================================================================
 (global-set-key (kbd "C-x r") 'align-regexp)
 
-;; projectile
+;; projectile ==========================================================================================
 ;;(add-hook 'c-mode-hook 'projectile-find-other-file-other-window)
 ;;(add-hook 'c++-mode-hook 'projectile-find-other-file-other-window)
 (global-set-key (kbd "C-x x") 'projectile-find-other-file)
 
 
-;; changing cursor color
+;; changing cursor color ================================================================================
 (defvar blink-cursor-colors (list "#ff0000" "#ff7f00" "#ffff00" "#00ff00" "#0000ff" "#4b0082" "#9400D3" )
   "On each blink the cursor will cycle to the next color in this list.")
 (defvar blink-cursor-interval-visible 0.01)
@@ -110,8 +142,7 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 
 
 
-;;***** Loading packages ********
-
+;; Loading packages ======================================================================================
 ;; load emacs 24's package system. Add MELPA repository.
 (when (>= emacs-major-version 24)
   (require 'package)
