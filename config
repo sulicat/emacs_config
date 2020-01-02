@@ -4,6 +4,10 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
+(setq package-archives
+      '(("melpa" . "http://melpa.org/packages/")))
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -19,7 +23,7 @@
  '(custom-enabled-themes (quote (wombat)))
  '(package-selected-packages
    (quote
-    (markdown-mode projectile highlight-symbol idle-highlight-mode nyan-mode))))
+    (fill-column-indicator helm-ag helm-projectile latex-pretty-symbols latex-math-preview highlight-indent-guides company-irony-c-headers company-irony irony markdown-mode projectile highlight-symbol idle-highlight-mode nyan-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -27,7 +31,6 @@
  ;; If there is more than one, they won't work right.
  '(mode-line ((t (:background "#444444" :foreground "white"))))
  '(region ((t (:inverse-video t)))))
-
 
 ;; astyle using command line ===========================================================================
 (defun astyle-this-buffer (pmin pmax)
@@ -40,6 +43,10 @@
 (global-set-key (kbd "<C-tab>") 'astyle-this-buffer)
 
 
+;; Setting Style to stroup style  ======================================================================
+(setq c-default-style "stroustrup"
+      c-basic-offset 4)
+
 ;; added stuff =========================================================================================
 
 (setq inhibit-startup-message t)        	; Disable startup message
@@ -51,16 +58,26 @@
 (setq make-backup-files nil) 			; stop creating backup~ files
 (setq auto-save-default nil) 			; stop creating #autosave# files
 (electric-indent-mode 0)                        ; disable auto indent after new line
+(setq-default c-basic-offset 4)                 ; 4 space indent
+(menu-bar-mode 0)				; disable menu bar
+(setq linum-format " %d ")			; line number format
+(scroll-bar-mode -1)                            ; Ugly scroll bar
+(global-auto-revert-mode t)                     ; auto reload buffer
+
+;; Nyan mode
 (nyan-mode 1)
 (nyan-start-animation)
-(setq-default c-basic-offset 4)                 ; 4 space indent
 
 ;; enable highlight symbol mode
 (defun highlight-symbol-mode-on () (highlight-symbol-mode 1))
 (define-globalized-minor-mode global-highlight-symbol-mode highlight-symbol-mode highlight-symbol-mode-on)
 (global-highlight-symbol-mode 1)
 
-
+;; fill column 80 chars
+;;(define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
+;;(global-fci-mode 1)
+;;(setq-default header-line-format
+;;              (list " " (make-string 79 ?-) "|"))
 
 
 ;; font ================================================================================================
@@ -105,15 +122,15 @@
 (global-set-key (kbd "C-x r") 'align-regexp)
 
 ;; projectile ==========================================================================================
-;;(add-hook 'c-mode-hook 'projectile-find-other-file-other-window)
-;;(add-hook 'c++-mode-hook 'projectile-find-other-file-other-window)
 (global-set-key (kbd "C-x x") 'projectile-find-other-file)
+(global-set-key (kbd "C-x g") 'helm-projectile-grep)
+
 
 
 ;; changing cursor color ================================================================================
-(defvar blink-cursor-colors (list "#ff0000" "#ff7f00" "#ffff00" "#00ff00" "#0000ff" "#4b0082" "#9400D3" )
+(defvar blink-cursor-colors (list "#ff0000" "#ffff00" "#00ff00" "#0000ff" )
   "On each blink the cursor will cycle to the next color in this list.")
-(defvar blink-cursor-interval-visible 0.01)
+(defvar blink-cursor-interval-visible 0.5)
 (defvar blink-cursor-interval-invisible 0.01)
 
 
@@ -139,18 +156,6 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
               blink-cursor-interval-visible
             blink-cursor-interval-invisible))))
 (ad-activate 'internal-show-cursor)
-
-
-
-;; Loading packages ======================================================================================
-;; load emacs 24's package system. Add MELPA repository.
-(when (>= emacs-major-version 24)
-  (require 'package)
-  (add-to-list
-   'package-archives
-   ;; '("melpa" . "http://stable.melpa.org/packages/") ; many packages won't show if using stable
-   '("melpa" . "http://melpa.milkbox.net/packages/")
-   t))
 
 
 
