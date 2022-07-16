@@ -23,7 +23,7 @@
  '(custom-enabled-themes (quote (wombat)))
  '(package-selected-packages
    (quote
-    (magit fill-column-indicator helm-ag helm-projectile latex-pretty-symbols latex-math-preview highlight-indent-guides company-irony-c-headers company-irony irony markdown-mode projectile highlight-symbol idle-highlight-mode nyan-mode))))
+    (rjsx-mode gradle-mode js2-mode glsl-mode omnisharp csharp-mode magit fill-column-indicator helm-ag helm-projectile latex-pretty-symbols latex-math-preview highlight-indent-guides company-irony-c-headers company-irony irony markdown-mode projectile highlight-symbol idle-highlight-mode nyan-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -67,6 +67,8 @@
 (setq backup-directory-alist `(("." . "~/.emacs_saves"))) ; backups outside the project
 (which-function-mode 1)                         ; show the function name in the status bar
 
+;; js2 mode
+(add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
 
 ;; Nyan mode
 (nyan-mode 1)
@@ -161,6 +163,7 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
             blink-cursor-interval-invisible))))
 (ad-activate 'internal-show-cursor)
 
-
+(c-set-offset 'substatement-open 0)
+(c-set-offset 'inline-open '0)
 
 
